@@ -4,80 +4,103 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Veículos - Comparação</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f7fa;
             margin: 0;
-            padding: 20px;
-        }
-        h1 {
-            text-align: center;
+            padding: 0;
             color: #333;
         }
-        form {
-            background-color: #fff;
+        header, footer {
+            background-color: #007bff;
+            color: white;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        footer p {
+            margin: 0;
+            font-size: 1.1em;
+        }
+        form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
             max-width: 800px;
-            margin: 20px auto;
+            margin: 40px auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         label {
-            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
         }
         input, select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin-bottom: 20px;
             border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+        button {
+            padding: 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #218838;
         }
         .results {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
+            margin-top: 40px;
             max-width: 800px;
-            margin: 20px auto;
+            margin: 40px auto;
         }
         .card {
-            background-color: #fff;
+            background-color: white;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 48%;
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-10px);
         }
         .card h2 {
-            color: #28a745;
-            font-size: 1.5em;
+            font-size: 1.8em;
+            color: #007bff;
             margin-bottom: 15px;
         }
         .card p {
-            margin: 5px 0;
             font-size: 1.1em;
+            margin-bottom: 10px;
         }
         .highlight {
             font-weight: bold;
             font-size: 1.3em;
             color: #28a745;
         }
-        button {
-            padding: 10px 15px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
     </style>
 </head>
 <body>
 
-<h1>Calculadora de Veículos: Compra vs Assinatura</h1>
+<header>
+    <h1>Calculadora de Veículos: Compra vs Assinatura</h1>
+</header>
 
 <form id="calculadora">
     <label for="valor-veiculo">Valor do Veículo (Compra):</label>
@@ -130,6 +153,10 @@
     </div>
 </div>
 
+<footer>
+    <p>&copy; 2024 Calculadora de Veículos</p>
+</footer>
+
 <script>
     function calcular() {
         const valorVeiculo = parseFloat(document.getElementById('valor-veiculo').value);
@@ -155,19 +182,19 @@
         const custoDepreciacao = valorVeiculo * (1 - Math.pow(1 - depreciacao, prazo / 12));
         const custoTotalCompra = custoFinanciamento + custoManutencao + custoIPVA + custoLicenciamentoSeguro + custoDepreciacao;
 
-        // Rendimento do investimento da entrada
-        const rendimentoInvestimento = valorEntrada * Math.pow(1 + taxaRendimento, prazo);
+        // Cálculo de rendimento se o cliente investisse o valor da entrada
+        const rendimentoEntrada = valorEntrada * Math.pow(1 + taxaRendimento, prazo);
 
-        // Cálculo da assinatura
+        // Cálculos para assinatura
         const custoTotalAssinatura = valorAssinatura * prazo;
 
         // Exibir resultados
-        document.getElementById('custo-compra').innerHTML = `Custo total do financiamento: R$ ${custoFinanciamento.toFixed(2)}`;
-        document.getElementById('rendimento-compra').innerHTML = `Rendimento do investimento: R$ ${rendimentoInvestimento.toFixed(2)}`;
-        document.getElementById('custo-total-compra').innerHTML = `Custo total da compra: R$ ${custoTotalCompra.toFixed(2)}`;
+        document.getElementById('custo-compra').textContent = `Custo total com financiamento: R$ ${custoFinanciamento.toFixed(2)}`;
+        document.getElementById('rendimento-compra').textContent = `Rendimento da entrada investida: R$ ${rendimentoEntrada.toFixed(2)}`;
+        document.getElementById('custo-total-compra').textContent = `Custo total da compra: R$ ${custoTotalCompra.toFixed(2)}`;
 
-        document.getElementById('custo-assinatura').innerHTML = `Custo total da assinatura: R$ ${custoTotalAssinatura.toFixed(2)}`;
-        document.getElementById('custo-total-assinatura').innerHTML = `Custo total da assinatura: R$ ${custoTotalAssinatura.toFixed(2)}`;
+        document.getElementById('custo-assinatura').textContent = `Custo total da assinatura: R$ ${custoTotalAssinatura.toFixed(2)}`;
+        document.getElementById('custo-total-assinatura').textContent = `Total assinatura: R$ ${custoTotalAssinatura.toFixed(2)}`;
     }
 </script>
 
