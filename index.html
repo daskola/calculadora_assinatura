@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Veículos</title>
+    <title>Calculadora de Veículos - Comparação</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
             margin: 0;
             padding: 20px;
-            background-color: #f4f4f9;
         }
         h1 {
+            text-align: center;
             color: #333;
         }
         form {
@@ -19,77 +20,115 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 20px auto;
         }
         label {
-            display: block;
-            margin-bottom: 10px;
             font-weight: bold;
         }
-        input {
+        input, select {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+        .results {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 48%;
+        }
+        .card h2 {
+            color: #28a745;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        .card p {
+            margin: 5px 0;
+            font-size: 1.1em;
+        }
+        .highlight {
+            font-weight: bold;
+            font-size: 1.3em;
+            color: #28a745;
+        }
         button {
             padding: 10px 15px;
-            background-color: #28a745;
-            color: #fff;
+            background-color: #007bff;
+            color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            width: 100%;
         }
         button:hover {
-            background-color: #218838;
-        }
-        .result {
-            margin-top: 20px;
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
 
-<h1>Calculadora Compra x Assinatura de Veículos</h1>
+<h1>Calculadora de Veículos: Compra vs Assinatura</h1>
 
 <form id="calculadora">
     <label for="valor-veiculo">Valor do Veículo (Compra):</label>
-    <input type="number" id="valor-veiculo" required>
+    <input type="number" id="valor-veiculo" placeholder="Ex: 60.000" required>
 
     <label for="valor-entrada">Valor de Entrada:</label>
-    <input type="number" id="valor-entrada" required>
+    <input type="number" id="valor-entrada" placeholder="Ex: 12.000" required>
 
     <label for="taxa-juros">Taxa de Juros ao Mês (%):</label>
-    <input type="number" id="taxa-juros" step="0.01" required>
+    <input type="number" id="taxa-juros" placeholder="Ex: 1.5" step="0.01" required>
 
     <label for="prazo-financiamento">Prazo do Financiamento (meses):</label>
-    <input type="number" id="prazo-financiamento" required>
+    <input type="number" id="prazo-financiamento" placeholder="Ex: 24" required>
 
     <label for="manutencao-anual">Manutenções Anuais (R$):</label>
-    <input type="number" id="manutencao-anual" required>
+    <input type="number" id="manutencao-anual" placeholder="Ex: 1.200" required>
 
     <label for="ipva">IPVA (% do valor do veículo):</label>
-    <input type="number" id="ipva" step="0.01" required>
+    <input type="number" id="ipva" placeholder="Ex: 4" step="0.01" required>
 
     <label for="licenciamento">Licenciamento e Despachante (Anual):</label>
-    <input type="number" id="licenciamento" required>
+    <input type="number" id="licenciamento" placeholder="Ex: 800" required>
 
     <label for="seguro">Seguro Anual:</label>
-    <input type="number" id="seguro" required>
+    <input type="number" id="seguro" placeholder="Ex: 1.500" required>
 
     <label for="depreciacao">Depreciação Anual (%):</label>
-    <input type="number" id="depreciacao" step="0.01" required>
+    <input type="number" id="depreciacao" placeholder="Ex: 10" step="0.01" required>
 
     <label for="taxa-rendimento">Taxa de Rendimento Financeiro (% ao mês):</label>
-    <input type="number" id="taxa-rendimento" step="0.01" required>
+    <input type="number" id="taxa-rendimento" placeholder="Ex: 0.5" step="0.01" required>
 
     <label for="valor-assinatura">Valor da Assinatura Mensal (R$):</label>
-    <input type="number" id="valor-assinatura" required>
+    <input type="number" id="valor-assinatura" placeholder="Ex: 1.200" required>
 
     <button type="button" onclick="calcular()">Calcular</button>
 </form>
 
-<div class="result" id="resultado"></div>
+<div class="results">
+    <div class="card">
+        <h2>Compra do Veículo</h2>
+        <p id="custo-compra"></p>
+        <p id="rendimento-compra"></p>
+        <p><span class="highlight" id="custo-total-compra"></span></p>
+    </div>
+    <div class="card">
+        <h2>Assinatura do Veículo</h2>
+        <p id="custo-assinatura"></p>
+        <p><span class="highlight" id="custo-total-assinatura"></span></p>
+    </div>
+</div>
 
 <script>
     function calcular() {
@@ -105,36 +144,27 @@
         const taxaRendimento = parseFloat(document.getElementById('taxa-rendimento').value) / 100;
         const valorAssinatura = parseFloat(document.getElementById('valor-assinatura').value);
 
-        // Cálculos de financiamento
+        // Cálculos para compra
         const valorFinanciado = valorVeiculo - valorEntrada;
         const parcelaMensal = (valorFinanciado * taxaJuros) / (1 - Math.pow(1 + taxaJuros, -prazo));
         const custoFinanciamento = parcelaMensal * prazo;
-        
-        // Cálculos de custos extras
+
         const custoManutencao = manutencao * (prazo / 12);
         const custoIPVA = valorVeiculo * ipva * (prazo / 12);
-        const custoSeguroLicenciamento = (seguro + licenciamento) * (prazo / 12);
+        const custoLicenciamentoSeguro = (licenciamento + seguro) * (prazo / 12);
         const custoDepreciacao = valorVeiculo * (1 - Math.pow(1 - depreciacao, prazo / 12));
-
-        // Custo total da compra
-        const custoTotalCompra = custoFinanciamento + custoManutencao + custoIPVA + custoSeguroLicenciamento + custoDepreciacao;
-
-        // Custo total da assinatura
-        const custoTotalAssinatura = valorAssinatura * prazo;
+        const custoTotalCompra = custoFinanciamento + custoManutencao + custoIPVA + custoLicenciamentoSeguro + custoDepreciacao;
 
         // Rendimento do investimento da entrada
         const rendimentoInvestimento = valorEntrada * Math.pow(1 + taxaRendimento, prazo);
 
-        // Exibição dos resultados
-        const resultado = `
-            <h2>Resultados</h2>
-            <p>Custo total da compra: R$ ${custoTotalCompra.toFixed(2)}</p>
-            <p>Custo total da assinatura: R$ ${custoTotalAssinatura.toFixed(2)}</p>
-            <p>Rendimento do investimento: R$ ${rendimentoInvestimento.toFixed(2)}</p>
-        `;
-        document.getElementById('resultado').innerHTML = resultado;
-    }
-</script>
+        // Cálculo da assinatura
+        const custoTotalAssinatura = valorAssinatura * prazo;
 
-</body>
-</html>
+        // Exibir resultados
+        document.getElementById('custo-compra').innerHTML = `Custo total do financiamento: R$ ${custoFinanciamento.toFixed(2)}`;
+        document.getElementById('rendimento-compra').innerHTML = `Rendimento do investimento: R$ ${rendimentoInvestimento.toFixed(2)}`;
+        document.getElementById('custo-total-compra').innerHTML = `Custo total da compra: R$ ${custoTotalCompra.toFixed(2)}`;
+
+        document.getElementById('custo-assinatura').innerHTML = `Custo total da assinatura: R$ ${custoTotalAssinatura.toFixed(2)}`;
+        document.getElementById('custo-total-assinatura').innerHTML = `Custo total da assinatura: R$ ${
